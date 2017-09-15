@@ -4,10 +4,11 @@ This repo contains a utility tool to generate hourly reports of usage
 against a Docker EE deployment, which can then be used to bill internal
 departments for usage.
 
-This tool exposes the `Collection` for the given resources, which can then
-be mapped back to internal teams or billing departments.   We recommend
-different billable departments not have their resources placed in the
-same collections for this reason.
+This tool exposes the `Collection` for the given resources, which
+can then be mapped back to internal teams or billing departments.
+We recommend different billable departments have their resources placed
+in the different collections, or consider using hierarchies to separate
+to help in structuring a cleaner chargeback structure.
 
 The key metrics exposed in this tool are:
 
@@ -18,6 +19,20 @@ The key metrics exposed in this tool are:
 * `Volume` - Min, Max, and average MB used by storage volumes on the system
 
 
+Here are a few examples:
+```csv
+TYPE,COLLECTION,CONTAINER ID,CONTAINER NAME,SAMPLE DURATION IN SECONDS,CUMULATIVE VALUE,MIN VALUE,MAX VALUE,AVE VALUE
+CPU SECONDS,/dev/sneaky,bc1abd880e77,sneaky1.1.3b09xmyaoy4niw29xd0h004ig,480.000000,273.107326,0.000000,0.000000,0.000000
+CPU SECONDS,/prod,b146e7f333c5,prodweb1.1.ec0hf2beeq2kvcm7mspeb8ucg,3600.000000,0.000000,0.000000,0.000000,0.000000
+MEM MB,/dev/sneaky,bc1abd880e77,sneaky1.1.3b09xmyaoy4niw29xd0h004ig,480.000000,0.000000,145.011719,145.023438,145.019965
+MEM MB,/prod,b146e7f333c5,prodweb1.1.ec0hf2beeq2kvcm7mspeb8ucg,3600.000000,0.000000,1.410156,1.410156,1.410156
+NETWORK RX MB,/dev/sneaky,bc1abd880e77,sneaky1.1.3b09xmyaoy4niw29xd0h004ig,480.000000,0.001236,0.000000,0.000000,0.000000
+NETWORK RX MB,/prod,b146e7f333c5,prodweb1.1.ec0hf2beeq2kvcm7mspeb8ucg,3600.000000,0.000000,0.000000,0.000000,0.000000
+NETWORK TX MB,/dev/sneaky,bc1abd880e77,sneaky1.1.3b09xmyaoy4niw29xd0h004ig,480.000000,0.000349,0.000000,0.000000,0.000000
+NETWORK TX MB,/prod,b146e7f333c5,prodweb1.1.ec0hf2beeq2kvcm7mspeb8ucg,3600.000000,0.000000,0.000000,0.000000,0.000000
+VOLUME MB,/stage,,192.168.122.105:12376/bunchostuff,300.000000,0.000000,529.484172,529.484172,529.484172
+CONTAINER STORAGE MB,/stage,e01c601c518f,builder.1.mm39xsyro9scyoo5rbb11nypk,300.000000,0.000000,278.255743,278.255743,278.255743
+```
 
 ## Using published images from Docker Hub
 
