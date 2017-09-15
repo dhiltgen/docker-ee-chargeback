@@ -133,7 +133,7 @@ func DoGather(c *cli.Context) error {
 	}
 
 	if !omitHeader {
-		fmt.Printf("TYPE,COLLECTION,CONTAINER ID,CONTAINER NAME,SAMPLE DURATION IN SECONDS,CUMULATIVE VALUE,MIN VALUE,MAX VALUE,AVE VALUE\n")
+		fmt.Printf("TYPE,COLLECTION,CONTAINER ID,NAME,SAMPLE DURATION IN SECONDS,CUMULATIVE VALUE,MIN VALUE,MAX VALUE,AVE VALUE\n")
 	}
 	for _, entry := range results {
 		fmt.Printf("%s,%s,%s,%s,%f,%f,%f,%f,%f\n",
