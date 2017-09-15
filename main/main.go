@@ -1,7 +1,10 @@
 package main
 
 import (
+	"crypto/tls"
+	"crypto/x509"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -10,7 +13,6 @@ import (
 	"github.com/dhiltgen/docker-ee-chargeback"
 
 	"github.com/codegangsta/cli"
-	"github.com/docker/go-connections/tlsconfig"
 	"github.com/prometheus/client_golang/api"
 	"github.com/prometheus/client_golang/api/prometheus/v1"
 
@@ -18,17 +20,27 @@ import (
 )
 
 func connect(ucp, certsDir string) v1.API {
-	tlsCfg, err := tlsconfig.Client(tlsconfig.Options{
-		CAFile:   filepath.Join(certsDir, "ca.pem"),
-		CertFile: filepath.Join(certsDir, "cert.pem"),
-		KeyFile:  filepath.Join(certsDir, "key.pem"),
-	})
+	cert, err := tls.LoadX509KeyPair(filepath.Join(certsDir, "cert.pem"), filepath.Join(certsDir, "key.pem"))
 	if err != nil {
 		log.Fatalf("Unable to load certs: %s", err)
 	}
+	caCert, err := ioutil.ReadFile(filepath.Join(certsDir, "ca.pem"))
+	if err != nil {
+		log.Fatalf("Unable to load certs: %s", err)
+	}
+	caCertPool := x509.NewCertPool()
+	caCertPool.AppendCertsFromPEM(caCert)
+
+	certChain := []tls.Certificate{cert}
+
+	tlsConfig := &tls.Config{
+		Certificates:       certChain,
+		RootCAs:            caCertPool,
+		InsecureSkipVerify: true,
+	}
 
 	transport := &http.Transport{
-		TLSClientConfig: tlsCfg,
+		TLSClientConfig: tlsConfig,
 	}
 	promCfg := api.Config{
 		Address:      fmt.Sprintf("https://%s:12387", ucp),
@@ -98,7 +110,7 @@ func DoGather(c *cli.Context) error {
 	}
 	duration := c.Int("duration")
 
-	log.Debug("Getting started...")
+	log.Debugf("Connecting to %s using certs found in %s", ucp, certsDir)
 	promAPI := connect(ucp, certsDir)
 
 	log.Debug("Querying...")

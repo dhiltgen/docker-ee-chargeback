@@ -67,9 +67,6 @@ func network(promAPI v1.API, r v1.Range, skipSystemResources bool, direction str
 			Name:         name,
 			TotalSeconds: uptime.Seconds(),
 			Cumulative:   float64(endVal-startVal) / 1024.0 / 1024.0,
-			//Min          :
-			//Max          :
-			//Ave          :
 		})
 
 	}

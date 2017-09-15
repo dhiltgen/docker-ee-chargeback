@@ -54,11 +54,7 @@ func CPUMetrics(promAPI v1.API, r v1.Range, skipSystemResources bool) ([]Entry, 
 			Name:         name,
 			TotalSeconds: uptime.Seconds(),
 			Cumulative:   float64(endVal-startVal) / 1000000000.0,
-			//Min          :
-			//Max          :
-			//Ave          :
 		})
-
 	}
 	return results, nil
 }

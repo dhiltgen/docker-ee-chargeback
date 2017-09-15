@@ -54,15 +54,13 @@ func VolumeMetrics(promAPI v1.API, r v1.Range, skipSystemResources bool) ([]Entr
 		uptime := end.Sub(start)
 
 		results = append(results, Entry{
-			Label:      "VOLUME MB",
-			Collection: collection,
-			//ID:
+			Label:        "VOLUME MB",
+			Collection:   collection,
 			Name:         name,
 			TotalSeconds: uptime.Seconds(),
-			// Cumulative:
-			Min: float64(min),
-			Max: float64(max),
-			Ave: ave,
+			Min:          float64(min),
+			Max:          float64(max),
+			Ave:          ave,
 		})
 	}
 	return results, nil

@@ -59,10 +59,9 @@ func MemoryMetrics(promAPI v1.API, r v1.Range, skipSystemResources bool) ([]Entr
 			ID:           id,
 			Name:         name,
 			TotalSeconds: uptime.Seconds(),
-			// Cumulative:
-			Min: float64(min),
-			Max: float64(max),
-			Ave: ave,
+			Min:          float64(min),
+			Max:          float64(max),
+			Ave:          ave,
 		})
 	}
 	return results, nil
